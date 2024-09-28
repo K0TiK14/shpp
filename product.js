@@ -57,10 +57,14 @@ AbstractProduct.prototype.getAverageRating = function () {
   return counter > 0 ? averageRating / counter : 0;
 };
 AbstractProduct.prototype.getFullInformation = function () {
-  return 0;
+  return Object.entries(this)
+    .filter(([, value]) => typeof value !== "function")
+    .map(([key, value]) => `${key} - ${value}`)
+    .join("\n");
 };
+
 AbstractProduct.prototype.getPriceForQuantity = function () {
-  return 0;
+  return this.price * this.quantity;
 };
 
 function Clothes(

@@ -111,14 +111,23 @@ function runTests() {
 
   // Тести для product1
   console.assert(product1.valueAccessor("ID") === 1, "ID не співпадає");
-  console.assert(product1.valueAccessor("name") === "Футболка", "Назва не співпадає");
+  console.assert(
+    product1.valueAccessor("name") === "Футболка",
+    "Назва не співпадає"
+  );
   console.assert(
     product1.valueAccessor("description") === "Футболка Зоряні Війни",
     "Опис не співпадає"
   );
   console.assert(product1.valueAccessor("price") === 500, "Ціна не співпадає");
-  console.assert(product1.valueAccessor("brand") === "Nike", "Бренд не співпадає");
-  console.assert(product1.valueAccessor("quantity") === 15, "Кількість не співпадає");
+  console.assert(
+    product1.valueAccessor("brand") === "Nike",
+    "Бренд не співпадає"
+  );
+  console.assert(
+    product1.valueAccessor("quantity") === 15,
+    "Кількість не співпадає"
+  );
   console.assert(
     product1.valueAccessor("reviews").length === 3,
     "Кількість відгуків не співпадає"
@@ -133,7 +142,10 @@ function runTests() {
   console.assert(product1.valueAccessor("ID") === 10, "ID не оновлено");
 
   product1.valueAccessor("name", "Нова футболка");
-  console.assert(product1.valueAccessor("name") === "Нова футболка", "Назва не оновлена");
+  console.assert(
+    product1.valueAccessor("name") === "Нова футболка",
+    "Назва не оновлена"
+  );
 
   product1.valueAccessor("price", 550);
   console.assert(product1.valueAccessor("price") === 550, "Ціна не оновлена");
@@ -182,6 +194,24 @@ function runTests() {
     "\n--------------------------sortProducts(products, 'price')-------------------------------\n"
   );
   console.log(sortProducts(products, "price"));
+
+  console.log(
+    "\n--------------------------product1.getFullInformation()-------------------------------\n"
+  );
+  console.log(product1.getFullInformation());
+  console.log(
+    "\n--------------------------product3.getFullInformation()-------------------------------\n"
+  );
+  console.log(product3.getFullInformation());
+
+  console.log(
+    "\n--------------------------product1.getPriceForQuantity()-------------------------------\n"
+  );
+  console.log(product1.getPriceForQuantity());
+  console.log(
+    "\n--------------------------product3.getPriceForQuantity()-------------------------------\n"
+  );
+  console.log(product3.getPriceForQuantity());
 }
 
 // Запуск тестів
