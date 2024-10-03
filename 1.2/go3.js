@@ -1,3 +1,4 @@
+// task 1.2.4
 function readHttpLikeInput() {
   var fs = require("fs");
   var res = "";
@@ -19,51 +20,63 @@ function readHttpLikeInput() {
 
   return res;
 }
-
+const log = (s) => console.log(s);
 let contents = readHttpLikeInput();
 
-function outputHttpResponse(statusCode, statusMessage, headers, body, sum) {
-  if (statusCode == 200) {
-    console.log(
-      "HTTP/1.1 " +
-        statusCode +
-        " " +
-        statusMessage +
-        "\n" +
-        `Server: Apache/2.2.14 (Win32)
+function outputHttpResponse(statusCode, statusMessage, headers, body) {
+  log(
+    "HTTP/1.1 " +
+      statusCode +
+      " " +
+      statusMessage +
+      `\nServer: Apache/2.2.14 (Win32)
 Connection: Closed
-Content-Type: text/html; charset=utf-8
-Content-Length: ` +
-        sum.toString().length +
-        "\n\n" +
-        sum
-    );
+Content-Type: text/html; charset=utf-8`
+  );
+
+  if (statusCode == 200) {
+    log("Content-Length: " + body.length + "\n\n" + body);
   }
   if (statusCode == 400 || statusCode == 404) {
-    console.log(
-      "HTTP/1.1 " +
-        statusCode +
-        " " +
-        statusMessage +
-        "\n" +
-        `Server: Apache/2.2.14 (Win32)
-Connection: Closed
-Content-Type: text/html; charset=utf-8
-Content-Length: 9` +
-        "\n\nnot found"
-    );
+    log("Content-Length: 9" + "\n\nnot found");
   }
 }
 
 function processHttpRequest(method, uri, headers, body) {
-  const passwords = require("fs").readFileSync("passwords.txt");
+  let passwordsLines = undefined;
+  try {
+    passwordsLines = require("fs")
+      .readFileSync("passwords.txt", "utf8")
+      .split("\n")
+      .map((line) => line.trim());
+    // eslint-disable-next-line no-unused-vars
+  } catch (e) {
+    outputHttpResponse("500", "Internal Server Error", headers, body);
+    return;
+  }
+  const [bodyLogin, bodyPassword] = body.split("&");
+  const loginPassword = (
+    bodyLogin.split("=")[1] +
+    ":" +
+    bodyPassword.split("=")[1]
+  ).trim();
+  const searchResultIndex = passwordsLines.findIndex(
+    (passwordsLine) => passwordsLine == loginPassword
+  );
 
   if (uri !== "/api/checkLoginAndPassword") {
     outputHttpResponse("404", "Not Found", headers, body);
   } else if (headers["Content-Type"] !== "application/x-www-form-urlencoded") {
     outputHttpResponse("400", "Bad Request", headers, body);
-  } else if (method === "POST") {
-    outputHttpResponse("200", "OK", headers, body);
+  } else if (searchResultIndex === -1) {
+    outputHttpResponse("200", "OK", headers, "user not found");
+  } else if (searchResultIndex !== -1) {
+    outputHttpResponse(
+      "200",
+      "OK",
+      headers,
+      '<h1 style="color:green">FOUND</h1>'
+    );
   }
 }
 
