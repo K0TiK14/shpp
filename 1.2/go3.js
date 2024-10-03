@@ -56,23 +56,14 @@ Content-Length: 9` +
 }
 
 function processHttpRequest(method, uri, headers, body) {
-  let uriNums = uri.split("=")[1].split(",");
-  let sum;
-  if (uriNums.length === 1 && uriNums[0] === "") {
-    uriNums = undefined;
-  } else {
-    sum = uriNums.reduce((acc, num) => (acc += +num), 0);
-  }
-  if (method === "GET" && uri.substring(0, 5) !== "/sum?" && headers) {
+  const passwords = require("fs").readFileSync("passwords.txt");
+
+  if (uri !== "/api/checkLoginAndPassword") {
     outputHttpResponse("404", "Not Found", headers, body);
-  } else if (
-    method === "GET" &&
-    (uri.substring(0, 10) !== "/sum?nums=" || !uriNums) &&
-    headers
-  ) {
+  } else if (headers["Content-Type"] !== "application/x-www-form-urlencoded") {
     outputHttpResponse("400", "Bad Request", headers, body);
-  } else if (method === "GET" && uriNums && headers) {
-    outputHttpResponse("200", "OK", headers, body, sum);
+  } else if (method === "POST") {
+    outputHttpResponse("200", "OK", headers, body);
   }
 }
 
